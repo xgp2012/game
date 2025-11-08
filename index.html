@@ -1,21 +1,743 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="zh-CN">
 <head>
-    <meta charset="utf-8">
-    <title>灯塔游戏下载站</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>灯塔游戏下载站 - 发现精品游戏</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #1e40af;
+            --dark-color: #1e293b;
+            --light-color: #f8fafc;
+            --gray-color: #64748b;
+            --accent-color: #f59e0b;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+        }
+        
+        body {
+            background-color: var(--dark-color);
+            color: var(--light-color);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo-icon {
+            font-size: 1.8rem;
+            color: var(--accent-color);
+        }
+        
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+        }
+        
+        nav a {
+            color: var(--light-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.3s;
+            padding: 0.5rem 0;
+        }
+        
+        nav a:hover {
+            opacity: 0.8;
+        }
+        
+        .hero {
+            padding: 4rem 0;
+            text-align: center;
+            background: linear-gradient(rgba(30, 41, 59, 0.9), rgba(30, 41, 59, 0.9)), 
+                        url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%231e293b"/><path d="M0 50 L100 50 M50 0 L50 100" stroke="%232563eb" stroke-width="1" opacity="0.1"/></svg>');
+            background-size: cover;
+        }
+        
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(to right, var(--light-color), var(--accent-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+            color: var(--gray-color);
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background-color: var(--accent-color);
+            color: var(--dark-color);
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .games-section {
+            padding: 4rem 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            font-size: 2.2rem;
+            position: relative;
+        }
+        
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: var(--primary-color);
+            margin: 0.5rem auto;
+            border-radius: 2px;
+        }
+        
+        .filter-controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .filter-btn {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--light-color);
+            border: none;
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .filter-btn.active, .filter-btn:hover {
+            background-color: var(--primary-color);
+        }
+        
+        .search-box {
+            display: flex;
+            max-width: 500px;
+            margin: 0 auto 3rem;
+        }
+        
+        .search-input {
+            flex: 1;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 50px 0 0 50px;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--light-color);
+            outline: none;
+        }
+        
+        .search-btn {
+            background-color: var(--primary-color);
+            color: var(--light-color);
+            border: none;
+            padding: 0 1.5rem;
+            border-radius: 0 50px 50px 0;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .search-btn:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+        
+        .game-card {
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .game-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .game-image {
+            width: 100%;
+            height: 180px;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--light-color);
+            font-weight: 600;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .game-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: var(--accent-color);
+            color: var(--dark-color);
+            padding: 0.3rem 0.8rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .game-content {
+            padding: 1.5rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .game-title {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .game-description {
+            color: var(--gray-color);
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            flex: 1;
+        }
+        
+        .game-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+        
+        .game-rating {
+            color: var(--accent-color);
+        }
+        
+        .game-size {
+            color: var(--gray-color);
+        }
+        
+        .game-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .game-tag {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--gray-color);
+            padding: 0.2rem 0.6rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+        }
+        
+        .download-btn {
+            display: block;
+            width: 100%;
+            padding: 0.8rem;
+            background-color: var(--primary-color);
+            color: var(--light-color);
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        .download-btn:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        .features-section {
+            padding: 4rem 0;
+            background-color: rgba(0, 0, 0, 0.2);
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+        
+        .feature-card {
+            text-align: center;
+            padding: 2rem 1rem;
+        }
+        
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        
+        .feature-title {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .feature-description {
+            color: var(--gray-color);
+        }
+        
+        footer {
+            background-color: rgba(0, 0, 0, 0.3);
+            padding: 3rem 0 1.5rem;
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+        
+        .footer-column {
+            text-align: center;
+            max-width: 600px;
+        }
+        
+        .footer-column h3 {
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+            position: relative;
+        }
+        
+        .footer-column h3::after {
+            content: '';
+            display: block;
+            width: 40px;
+            height: 3px;
+            background: var(--primary-color);
+            margin: 0.5rem auto;
+            border-radius: 2px;
+        }
+        
+        .footer-links {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .footer-links a {
+            color: var(--gray-color);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: var(--light-color);
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--gray-color);
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+            
+            .games-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+            
+            .footer-links {
+                flex-direction: column;
+                gap: 0.8rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+            
+            .section-title {
+                font-size: 1.8rem;
+            }
+            
+            .games-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
-
 <body>
-    <h1>灯塔游戏下载站&无毒安逸高速</h1>
-    <h1>求生之路2 2155公网联机版</h1>
-    <p>浩方统一版，百度贴吧咸鱼版。</p>
-    <p><a href="https://42-56-79-194.pd1.cjjd19.com:30443/download-cdn.cjjd19.com/123-305/cb3dd17b/1829748603-0/cb3dd17b398304b6ed6848d927c2b131/c-m89?v=5&t=1761365462&s=1761365462bb0ad2529318b7693cde5735993c0cab&r=FQHGDT&bzc=2&bzs=313834313938313431343a36333139343838333a373638393334313234383a31383431393831343134&u_ip=39.72.215.127&bzp=0&bi=519353784&filename=Left+4+Dead+2+v2155%E3%80%90%E7%99%BE%E5%BA%A6%E6%B1%82%E7%94%9F%E4%B9%8B%E8%B7%AF%E5%90%A7%E6%AC%A2%E8%BF%8E%E4%BD%A0%E3%80%91.zip&x-mf-biz-cid=f53cb885-d669-414d-a63a-172770b323e3-6eaa77&ndcp=1&cache_type=1&auto_redirect=0&xmfcid=96f23435-55c3-4878-b902-2a05ce52f4e90cd8a62355">点击跳转高速接口下载</a>
-    <p><a href="magnet:?xt=urn:btih:07B37F4B3C345DF8D363CA974E789837E1B2BDB4">点击跳转迅雷BT接口下载</a>   
-    <h1>CS1.6索沛联机版</h1>
-     <p>内置大量服务器内置补丁。</p>
-     <p><a href="http://wp.csgo16.com/down.php/ca96c46f03d167331771f12a5434a0e2.exe">点击跳转官方接口下载</a>
-    <p>
-</body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">⚓</div>
+                    <div class="logo-text">灯塔游戏</div>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="#home">首页</a></li>
+                        <li><a href="#games">游戏</a></li>
+                        <li><a href="#features">特色</a></li>
+                        <li><a href="#about">关于</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
 
+    <section class="hero" id="home">
+        <div class="container">
+            <h1>发现精品游戏，点亮游戏世界</h1>
+            <p>灯塔游戏下载站为您提供最新、最热门的游戏资源，安全下载，极致体验</p>
+            <a href="#games" class="cta-button">探索游戏</a>
+        </div>
+    </section>
+
+    <section class="games-section" id="games">
+        <div class="container">
+            <h2 class="section-title">热门游戏</h2>
+            
+            <div class="search-box">
+                <input type="text" class="search-input" placeholder="搜索游戏...">
+                <button class="search-btn"><i class="fas fa-search"></i></button>
+            </div>
+            
+            <div class="filter-controls">
+                <button class="filter-btn active" data-filter="all">全部</button>
+                <button class="filter-btn" data-filter="action">动作</button>
+                <button class="filter-btn" data-filter="rpg">角色扮演</button>
+                <button class="filter-btn" data-filter="strategy">策略</button>
+                <button class="filter-btn" data-filter="adventure">冒险</button>
+            </div>
+            
+            <div class="games-grid" id="games-container">
+                <!-- 游戏卡片将通过JavaScript动态生成 -->
+            </div>
+        </div>
+    </section>
+
+    <section class="features-section" id="features">
+        <div class="container">
+            <h2 class="section-title">平台特色</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🚀</div>
+                    <h3 class="feature-title">高速下载</h3>
+                    <p class="feature-description">采用CDN加速技术，确保您以最快速度下载游戏。</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🛡️</div>
+                    <h3 class="feature-title">安全可靠</h3>
+                    <p class="feature-description">所有游戏均经过严格安全检测，确保无病毒无广告。</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">📱</div>
+                    <h3 class="feature-title">多平台支持</h3>
+                    <p class="feature-description">支持PC、移动设备等多种平台，随时随地畅玩游戏。</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🔍</div>
+                    <h3 class="feature-title">精准推荐</h3>
+                    <p class="feature-description">基于您的游戏偏好，智能推荐您可能喜欢的游戏。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer id="about">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>关于我们</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">公司简介</a></li>
+                        <li><a href="#">团队介绍</a></li>
+                        <li><a href="#">联系我们</a></li>
+                        <li><a href="#">加入我们</a></li>
+                    </ul>
+                    <p>灯塔游戏下载站致力于为玩家提供最新、最热门的游戏资源，打造安全、便捷的游戏下载体验。</p>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                &copy; 2023 灯塔游戏下载站 版权所有
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 游戏数据 - 可以轻松扩展
+        const gamesData = [
+            {
+                id: 1,
+                title: "星际探险者",
+                description: "在浩瀚宇宙中探索未知星球，建立你的星际帝国。",
+                rating: 5,
+                size: "2.4 GB",
+                tags: ["冒险", "科幻", "开放世界"],
+                category: "adventure",
+                badge: "热门"
+            },
+            {
+                id: 2,
+                title: "暗影刺客",
+                description: "潜入敌后，完成不可能的刺杀任务。",
+                rating: 4,
+                size: "3.1 GB",
+                tags: ["动作", "潜行", "暗杀"],
+                category: "action",
+                badge: "新游"
+            },
+            {
+                id: 3,
+                title: "魔法学院",
+                description: "在奇幻世界中学习魔法，成为最强大的法师。",
+                rating: 5,
+                size: "1.8 GB",
+                tags: ["角色扮演", "魔法", "奇幻"],
+                category: "rpg",
+                badge: ""
+            },
+            {
+                id: 4,
+                title: "极限竞速",
+                description: "体验最真实的赛车游戏，挑战极限速度。",
+                rating: 4,
+                size: "4.2 GB",
+                tags: ["竞速", "体育", "模拟"],
+                category: "action",
+                badge: ""
+            },
+            {
+                id: 5,
+                title: "帝国崛起",
+                description: "建立你的文明，从石器时代发展到未来科技。",
+                rating: 5,
+                size: "2.7 GB",
+                tags: ["策略", "模拟", "历史"],
+                category: "strategy",
+                badge: "推荐"
+            },
+            {
+                id: 6,
+                title: "失落之城",
+                description: "探索古老遗迹，解开千年谜题。",
+                rating: 4,
+                size: "1.5 GB",
+                tags: ["冒险", "解谜", "探索"],
+                category: "adventure",
+                badge: ""
+            }
+        ];
+
+        // 生成游戏卡片
+        function generateGameCards(games) {
+            const gamesContainer = document.getElementById('games-container');
+            gamesContainer.innerHTML = '';
+            
+            games.forEach(game => {
+                const ratingStars = '★'.repeat(game.rating) + '☆'.repeat(5 - game.rating);
+                
+                const gameCard = document.createElement('div');
+                gameCard.className = 'game-card';
+                gameCard.setAttribute('data-category', game.category);
+                
+                gameCard.innerHTML = `
+                    <div class="game-image">
+                        ${game.title}
+                        ${game.badge ? `<div class="game-badge">${game.badge}</div>` : ''}
+                    </div>
+                    <div class="game-content">
+                        <h3 class="game-title">${game.title}</h3>
+                        <p class="game-description">${game.description}</p>
+                        
+                        <div class="game-tags">
+                            ${game.tags.map(tag => `<span class="game-tag">${tag}</span>`).join('')}
+                        </div>
+                        
+                        <div class="game-meta">
+                            <div class="game-rating">${ratingStars}</div>
+                            <div class="game-size">${game.size}</div>
+                        </div>
+                        
+                        <button class="download-btn" data-id="${game.id}">
+                            <i class="fas fa-download"></i> 立即下载
+                        </button>
+                    </div>
+                `;
+                
+                gamesContainer.appendChild(gameCard);
+            });
+            
+            // 添加下载按钮事件
+            document.querySelectorAll('.download-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const gameId = this.getAttribute('data-id');
+                    const game = gamesData.find(g => g.id == gameId);
+                    alert(`开始下载 ${game.title}`);
+                });
+            });
+        }
+
+        // 初始化页面
+        document.addEventListener('DOMContentLoaded', function() {
+            // 生成游戏卡片
+            generateGameCards(gamesData);
+            
+            // 平滑滚动
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    if(targetId === '#') return;
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if(targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+            
+            // 筛选功能
+            document.querySelectorAll('.filter-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    // 更新活动按钮
+                    document.querySelectorAll('.filter-btn').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                    
+                    const filter = this.getAttribute('data-filter');
+                    const allCards = document.querySelectorAll('.game-card');
+                    
+                    if (filter === 'all') {
+                        allCards.forEach(card => {
+                            card.style.display = 'flex';
+                        });
+                    } else {
+                        allCards.forEach(card => {
+                            if (card.getAttribute('data-category') === filter) {
+                                card.style.display = 'flex';
+                            } else {
+                                card.style.display = 'none';
+                            }
+                        });
+                    }
+                });
+            });
+            
+            // 搜索功能
+            document.querySelector('.search-btn').addEventListener('click', performSearch);
+            document.querySelector('.search-input').addEventListener('keyup', function(e) {
+                if (e.key === 'Enter') {
+                    performSearch();
+                }
+            });
+            
+            function performSearch() {
+                const searchTerm = document.querySelector('.search-input').value.toLowerCase();
+                if (searchTerm.trim() === '') {
+                    generateGameCards(gamesData);
+                    return;
+                }
+                
+                const filteredGames = gamesData.filter(game => 
+                    game.title.toLowerCase().includes(searchTerm) || 
+                    game.description.toLowerCase().includes(searchTerm) ||
+                    game.tags.some(tag => tag.toLowerCase().includes(searchTerm))
+                );
+                
+                generateGameCards(filteredGames);
+            }
+        });
+    </script>
+</body>
 </html>
